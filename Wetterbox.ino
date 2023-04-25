@@ -58,11 +58,20 @@ void setup(){
     //buzzer setup
     pinMode(buzzer, OUTPUT);
     
+    //activate buzzer (until raspberry pi is connected and digital sensors are initialized)
+    digitalWrite(buzzer,HIGH);
+
     //dht sensor setup
     dht.begin();
     
     //serial setup
     Serial.begin(9600);
+    while (!Serial) {
+        ; // wait for raspberry pi to connect
+    }
+    
+    //deactivate buzzer
+    digitalWrite(buzzer,LOW);
 }
 
 void loop(){
