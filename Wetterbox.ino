@@ -64,21 +64,24 @@ void setup(){
     //dht sensor setup
     dht.begin();
     
+    //activate error led until raspberry pi is connected
+    digitalWrite(error_led,HIGH);
+
     //serial setup
     Serial.begin(9600);
     while (!Serial) {
         ; // wait for raspberry pi to connect
     }
     
-    //deactivate buzzer
+    //deactivate buzzer and error led
     digitalWrite(buzzer,LOW);
+    digitalWrite(error_led,LOW);
 }
 
 void loop(){
     read_sensors();
+    serial_to_raspberry();
     heart_beat();
-
-
 }
 
 void serial_to_raspberry(){
