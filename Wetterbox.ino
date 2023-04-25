@@ -76,6 +76,9 @@ void setup(){
     //deactivate buzzer and error led
     digitalWrite(buzzer,LOW);
     digitalWrite(error_led,LOW);
+
+    //activate activity led
+    digitalWrite(activity_led,HIGH);
 }
 
 void loop(){
