@@ -13,6 +13,10 @@ int earth_temperature = 0;
 int ground_temperature = 0;
 int system_temperature = 0;
 
+int dht_humidity = 0;
+int dht_temperature = 0;
+int dht_heat_index = 0;
+
 
 //sensor pins
 const int water_level_sensor = 2;
@@ -35,6 +39,7 @@ DHT dht(DHTPIN, DHTTYPE);
 const int activity_led = 9;
 const int heart_beat_led = 10;
 const int error_led = 11;
+const int reading_led = 13;
 
 //buzzer pin
 const int buzzer = 12;
@@ -54,6 +59,7 @@ void setup(){
     pinMode(activity_led, OUTPUT);
     pinMode(heart_beat_led, OUTPUT);
     pinMode(error_led, OUTPUT);
+    pinMode(reading_led, OUTPUT);
     
     //buzzer setup
     pinMode(buzzer, OUTPUT);
@@ -88,24 +94,22 @@ void loop(){
 }
 
 void serial_to_raspberry(){
-    Serial.print("water_level: ");
     Serial.print(water_level);
-    Serial.print(" sun_intensity: ");
     Serial.print(sun_intensity);
-    Serial.print(" rain_intensity: ");
     Serial.print(rain_intensity);
-    Serial.print(" sound_intensity: ");
     Serial.print(sound_intensity);
-    Serial.print(" earth_temperature: ");
     Serial.print(earth_temperature);
-    Serial.print(" ground_temperature: ");
     Serial.print(ground_temperature);
-    Serial.print(" system_temperature: ");
     Serial.print(system_temperature);
-    Serial.println();
+    Serial.println("1111");
 }
 
 void read_sensors(){
+    digitalWrite(reading_led, HIGH);
+    dht_humidity = dht.readHumidity();
+    dht_temperature = dht.readTemperature();
+    dht_heat_index = dht.computeHeatIndex(dht_temperature, dht_humidity, false);
+
     water_level = analogRead(water_level_sensor);
     sun_intensity = analogRead(sun_intensity_sensor);
     rain_intensity = analogRead(rain_intensity_sensor);
@@ -114,6 +118,7 @@ void read_sensors(){
     earth_temperature = analogRead(earth_temperature_sensor);
     ground_temperature = analogRead(ground_temperature_sensor);
     system_temperature = analogRead(system_temperature_sensor);
+    digitalWrite(reading_led, LOW);
 }
 
 
