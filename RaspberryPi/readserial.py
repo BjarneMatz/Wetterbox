@@ -2,6 +2,7 @@
 from serial import Serial
 import time
 import json
+import requests
 
 
 def read_serial():
@@ -19,6 +20,9 @@ def send_data(data):
     """send data to server
     data: string"""
     print(data)
+    data = json.dumps(data) #convert data to json
+    data = data.encode('utf-8') #encode data to utf-8
+    requests.request("POST", "http://127.0.0.1:5000/api/v1/data", data=data) #send data to server
 
 
 def main():
