@@ -9,13 +9,13 @@ int sun_intensity = 0;
 int rain_intensity = 0;
 int sound_intensity = 0;
 
-int earth_temperature = 0;
-int ground_temperature = 0;
-int system_temperature = 0;
+float earth_temperature = 0;
+float ground_temperature = 0;
+float system_temperature = 0;
 
-int dht_humidity = 0;
-int dht_temperature = 0;
-int dht_heat_index = 0;
+float dht_humidity = 0;
+float dht_temperature = 0;
+float dht_heat_index = 0;
 
 
 //sensor pinout (analog)
