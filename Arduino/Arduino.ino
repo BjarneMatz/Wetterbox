@@ -19,10 +19,10 @@ int dht_heat_index = 0;
 
 
 //sensor pinout (analog)
-const int water_level_sensor = 2;
-const int sun_intensity_sensor = 3;
-const int rain_intensity_sensor = 4;
-const int sound_intensity_sensor = 5;
+const int water_level_sensor = 22;
+const int sun_intensity_sensor = 33;
+const int rain_intensity_sensor = 44;
+const int sound_intensity_sensor = 55;
 
 //sensor pinout (digital)
 const int earth_temperature_sensor = 6;
@@ -37,13 +37,16 @@ DHT dht(DHTPIN, DHTTYPE);
 
 
 //led pinout
-const int activity_led = 9;
-const int heart_beat_led = 10;
-const int error_led = 11;
-const int reading_led = 13;
+const int activity_led = 2;
+const int heart_beat_led = 3;
+const int error_led = 5;
+const int reading_led = 4;
 
 //buzzer pin
-const int buzzer = 12;
+const int buzzer = 6;
+
+//master delay
+const int master_delay = 1000;
 
 void setup(){
     //sensor setup (analog)
@@ -81,6 +84,7 @@ void setup(){
         ; // wait for raspberry pi to connect
     }
     
+    delay(250);
     //deactivate buzzer and error led
     digitalWrite(buzzer,LOW);
     digitalWrite(error_led,LOW);
@@ -99,19 +103,29 @@ void serial_to_raspberry(){
 
     //dht sensor data
     Serial.print(dht_humidity);
+    Serial.print(",");
     Serial.print(dht_temperature);
+    Serial.print(",");
     Serial.print(dht_heat_index);
+    Serial.print(",");
 
     //digital sensor data
     Serial.print(earth_temperature);
+    Serial.print(",");
     Serial.print(ground_temperature);
+    Serial.print(",");
     Serial.print(system_temperature);
-    
+    Serial.print(",");
+
     //analog sensor data
     Serial.print(water_level);
+    Serial.print(",");
     Serial.print(sun_intensity);
+    Serial.print(",");
     Serial.print(rain_intensity);
+    Serial.print(",");
     Serial.print(sound_intensity);
+    Serial.print(",");
 
     //impossible value to indicate end of data
     Serial.println("1111"); 
@@ -146,7 +160,7 @@ void heart_beat(){
     //function to indicate that arduino is running properly
 
     digitalWrite(heart_beat_led, HIGH);
-    delay(100);
+    delay(master_delay/2);
     digitalWrite(heart_beat_led, LOW);
-    delay(100);
+    delay(master_delay/2);
 }
