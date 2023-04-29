@@ -19,10 +19,10 @@ float dht_heat_index = 0;
 
 
 //sensor pinout (analog)
-const int water_level_sensor = 22;
-const int sun_intensity_sensor = 33;
-const int rain_intensity_sensor = 44;
-const int sound_intensity_sensor = 55;
+const int water_level_sensor = A1;
+const int sun_intensity_sensor = A2;
+const int rain_intensity_sensor = A0;
+const int sound_intensity_sensor = A3;
 
 //sensor pinout (digital)
 const int earth_temperature_sensor = 6;
