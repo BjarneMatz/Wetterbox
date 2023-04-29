@@ -1,4 +1,4 @@
-//libraries
+//libraries to include
 #include <DHT_U.h>
 #include <DHT.h>
 
@@ -18,12 +18,13 @@ int dht_temperature = 0;
 int dht_heat_index = 0;
 
 
-//sensor pins
+//sensor pinout (analog)
 const int water_level_sensor = 2;
 const int sun_intensity_sensor = 3;
 const int rain_intensity_sensor = 4;
 const int sound_intensity_sensor = 5;
 
+//sensor pinout (digital)
 const int earth_temperature_sensor = 6;
 const int ground_temperature_sensor = 7;
 const int system_temperature_sensor = 8;
@@ -35,7 +36,7 @@ const int system_temperature_sensor = 8;
 DHT dht(DHTPIN, DHTTYPE);
 
 
-//led pins
+//led pinout
 const int activity_led = 9;
 const int heart_beat_led = 10;
 const int error_led = 11;
@@ -45,12 +46,13 @@ const int reading_led = 13;
 const int buzzer = 12;
 
 void setup(){
-    //sensor setup
+    //sensor setup (analog)
     pinMode(water_level_sensor, INPUT);
     pinMode(sun_intensity_sensor, INPUT);
     pinMode(rain_intensity_sensor, INPUT);
     pinMode(sound_intensity_sensor, INPUT);
     
+    //sensor setup (digital)
     pinMode(earth_temperature_sensor, INPUT);
     pinMode(ground_temperature_sensor, INPUT);
     pinMode(system_temperature_sensor, INPUT);
@@ -94,35 +96,55 @@ void loop(){
 }
 
 void serial_to_raspberry(){
+
+    //dht sensor data
+    Serial.print(dht_humidity);
+    Serial.print(dht_temperature);
+    Serial.print(dht_heat_index);
+
+    //digital sensor data
+    Serial.print(earth_temperature);
+    Serial.print(ground_temperature);
+    Serial.print(system_temperature);
+    
+    //analog sensor data
     Serial.print(water_level);
     Serial.print(sun_intensity);
     Serial.print(rain_intensity);
     Serial.print(sound_intensity);
-    Serial.print(earth_temperature);
-    Serial.print(ground_temperature);
-    Serial.print(system_temperature);
-    Serial.println("1111");
+
+    //impossible value to indicate end of data
+    Serial.println("1111"); 
 }
 
 void read_sensors(){
+   //turn on reading led to indicate sensor reading
     digitalWrite(reading_led, HIGH);
+
+    //read dht sensor
     dht_humidity = dht.readHumidity();
     dht_temperature = dht.readTemperature();
     dht_heat_index = dht.computeHeatIndex(dht_temperature, dht_humidity, false);
 
+    //read analog sensors
     water_level = analogRead(water_level_sensor);
     sun_intensity = analogRead(sun_intensity_sensor);
     rain_intensity = analogRead(rain_intensity_sensor);
     sound_intensity = analogRead(sound_intensity_sensor);
     
+    //read digital sensors
     earth_temperature = analogRead(earth_temperature_sensor);
     ground_temperature = analogRead(ground_temperature_sensor);
     system_temperature = analogRead(system_temperature_sensor);
+    
+    //turn off reading led
     digitalWrite(reading_led, LOW);
 }
 
 
 void heart_beat(){
+    //function to indicate that arduino is running properly
+
     digitalWrite(heart_beat_led, HIGH);
     delay(100);
     digitalWrite(heart_beat_led, LOW);
