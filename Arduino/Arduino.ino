@@ -96,6 +96,7 @@ void setup(){
 void loop(){
     read_sensors();
     serial_to_raspberry();
+    check_if_raspberry_is_connected();
     heart_beat();
 }
 
@@ -129,6 +130,21 @@ void serial_to_raspberry(){
 
     //impossible value to indicate end of data
     Serial.println("1111"); 
+}
+
+void check_if_raspberry_is_connected(){
+    
+    //if raspberry pi is not connected, activate error led and buzzer
+    if(!Serial.available()){
+        digitalWrite(error_led,HIGH);
+        //digitalWrite(buzzer,HIGH);
+    }
+    else{
+        digitalWrite(error_led,LOW);
+        //digitalWrite(buzzer,LOW);
+    }
+    
+    Serial.read();
 }
 
 void read_sensors(){
