@@ -1,4 +1,5 @@
 import flask
+import datahandle
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -12,10 +13,12 @@ def get_data():
     if flask.request.method == 'POST':
         data = flask.request.data
         print(data)
+        datahandle.manage_data(data)
         return "Data received"
     else:
         print("No data received")
         return "No data received"
     
+
 
 app.run(host='0.0.0.0', port=5000)

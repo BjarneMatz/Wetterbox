@@ -16,10 +16,12 @@ def read_serial():
             ser.write(b"1") #send some data to the arduino to tell it the connection is still alive
         
 
-def send_data(data):
+def send_data(data:str):
     """send data to server
     data: string"""
-    print(data)
+    print(f"Received data: {data}") #print received data
+    data += f",{time.time()}" #inject timestamp into data
+    print(f"Data with timestamp: {data}") #print data with timestamp
     data = json.dumps(data) #convert data to json
     data = data.encode('utf-8') #encode data to utf-8
     requests.request("POST", "http://127.0.0.1:5000/api/v1/data", data=data) #send data to server

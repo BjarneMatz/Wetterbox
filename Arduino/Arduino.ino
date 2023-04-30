@@ -46,7 +46,7 @@ const int reading_led = 4;
 const int buzzer = 6;
 
 //master delay
-const int master_delay = 1000;
+const int master_delay = 10000;
 
 void setup(){
     //sensor setup (analog)
