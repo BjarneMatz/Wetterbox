@@ -1,7 +1,8 @@
 //libraries to include
 #include <DHT_U.h>
 #include <DHT.h>
-
+#include <DallasTemperature.h>
+#include <OneWire.h>
 
 //sensor reading variables
 int water_level = 0;
@@ -25,9 +26,17 @@ const int rain_intensity_sensor = A0;
 const int sound_intensity_sensor = A3;
 
 //sensor pinout (digital)
-const int earth_temperature_sensor = 6;
-const int ground_temperature_sensor = 7;
-const int system_temperature_sensor = 8;
+#define earth_temperature_sensor_pin 7
+#define ground_temperature_sensor_pin 8
+#define system_temperature_sensor_pin 9
+
+OneWire earth_temperature_sensor_onewire(earth_temperature_sensor_pin);
+OneWire ground_temperature_sensor_onewire(ground_temperature_sensor_pin);
+OneWire system_temperature_sensor_onewire(system_temperature_sensor_pin);
+
+DallasTemperature earth_temperature_sensor(&earth_temperature_sensor_onewire);
+DallasTemperature ground_temperature_sensor(&ground_temperature_sensor_onewire);
+DallasTemperature system_temperature_sensor(&earth_temperature_sensor_onewire); 
 
 
 //dht sensor setup
@@ -46,7 +55,7 @@ const int reading_led = 4;
 const int buzzer = 6;
 
 //master delay
-const int master_delay = 10000;
+const int master_delay = 5000;
 
 void setup(){
     //sensor setup (analog)
@@ -55,10 +64,6 @@ void setup(){
     pinMode(rain_intensity_sensor, INPUT);
     pinMode(sound_intensity_sensor, INPUT);
     
-    //sensor setup (digital)
-    pinMode(earth_temperature_sensor, INPUT);
-    pinMode(ground_temperature_sensor, INPUT);
-    pinMode(system_temperature_sensor, INPUT);
     
     //led setup
     pinMode(activity_led, OUTPUT);
@@ -89,8 +94,12 @@ void setup(){
     digitalWrite(buzzer,LOW);
     digitalWrite(error_led,LOW);
 
+    //wait for raspberry pi to initialize
+    delay(5000);
+
     //activate activity led
     digitalWrite(activity_led,HIGH);
+
 }
 
 void loop(){
@@ -151,6 +160,16 @@ void read_sensors(){
    //turn on reading led to indicate sensor reading
     digitalWrite(reading_led, HIGH);
 
+    //read digital sensors
+    earth_temperature_sensor.requestTemperatures();
+    ground_temperature_sensor.requestTemperatures();
+    system_temperature_sensor.requestTemperatures();
+
+    earth_temperature = earth_temperature_sensor.getTempCByIndex(0);
+    ground_temperature = ground_temperature_sensor.getTempCByIndex(0);
+    system_temperature = system_temperature_sensor.getTempCByIndex(0);
+
+
     //read dht sensor
     dht_humidity = dht.readHumidity();
     dht_temperature = dht.readTemperature();
@@ -162,10 +181,6 @@ void read_sensors(){
     rain_intensity = analogRead(rain_intensity_sensor);
     sound_intensity = analogRead(sound_intensity_sensor);
     
-    //read digital sensors
-    earth_temperature = analogRead(earth_temperature_sensor);
-    ground_temperature = analogRead(ground_temperature_sensor);
-    system_temperature = analogRead(system_temperature_sensor);
     
     //turn off reading led
     digitalWrite(reading_led, LOW);
